@@ -1,4 +1,40 @@
 name: Terraform Azure CI CD
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    # Terraform Formatting Check
+    - name: Terraform Format Check
+      run: terraform fmt -check -recursive
+
+    # Terraform Init
+    - name: Terraform Init
+      run: terraform init
+
+    # Terraform Validate
+    - name: Terraform Validate
+      run: terraform validate
+
+    # Terraform Lint (Best Practice)
+    - name: Install TFLint
+      uses: terraform-linters/setup-tflint@v4
+
+    - name: Run TFLint
+      run: tflint --init && tflint
+
+    # Terraform Security Scan
+    - name: Run tfsec
+      uses: aquasecurity/tfsec-action@v1.0.0
+
+    # Terraform Plan
+    - name: Terraform Plan
+      run: terraform plan -out=tfplan
+
+    # Terraform Apply (Only on main)
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main'
+      run: terraform apply -auto-approve tfplan
 
 on:
   push:
