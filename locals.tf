@@ -7,8 +7,7 @@ locals {
     #envs =["dev","uat","prod"]
     envs = {
     dev  = "centralindia"
-    uat  = "eastus"
+    #uat  = "eastus"
     #prod = "westeurope"
   }
-
 }
