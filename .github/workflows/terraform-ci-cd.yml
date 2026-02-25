@@ -10,24 +10,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # Step 1: Checkout repository
     - name: Checkout Repo
       uses: actions/checkout@v3
 
-    - name: Login to Azure using SP JSON
+    # Step 2: Install Terraform
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.7.5   # change to your preferred version
+
+    # Step 3: Login to Azure using SP JSON
+    - name: Azure Login
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS_JSON }}
         enable-AzPSSession: false
         environment: azurecloud
 
-    - name: Set Terraform CLI path
-      run: echo "TERRAFORM_CLI_PATH=$(which terraform)" >> $GITHUB_ENV
-
+    # Step 4: Terraform Init
     - name: Terraform Init
       run: terraform init
 
+    # Step 5: Terraform Plan
     - name: Terraform Plan
-      run: terraform plan
+      run: terraform plan -out=tfplan
 
+    # Step 6: Terraform Apply
     - name: Terraform Apply
-      run: terraform apply -auto-approve
+      run: terraform apply -auto-approve tfplan
