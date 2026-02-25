@@ -1,7 +1,7 @@
 locals {
     environment = "dev"
     project = "tflab"
-    location ="Central India "
+    location ="Central India"
     rg_name = "${local.project}-${local.environment}-rg"
     storage_name = "${local.project}${local.environment}sa123"
     #envs =["dev","uat","prod"]
@@ -10,4 +10,5 @@ locals {
     #uat  = "eastus"
     #prod = "westeurope"
   }
+
 }
